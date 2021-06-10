@@ -4,7 +4,7 @@ const { promisify } = require('util');
 class RedisClient {
   constructor() {
     this.client = redis.createClient();
-    this.client.on('error', (error) => console.log(error));
+    this.client.on('error', (error) => console.error(error));
 
     this.getter = promisify(this.client.get).bind(this.client);
     this.setter = promisify(this.client.set).bind(this.client);
