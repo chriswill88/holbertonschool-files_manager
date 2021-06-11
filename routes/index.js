@@ -1,10 +1,10 @@
-import { Router } from 'express';
+import express from 'express';
 import AppController from '../controllers/AppController';
 
-const status = Router();
-status.get('/status', AppController.getStatus);
+const statusRoute = express.Router();
+const statsRoute = express.Router();
 
-const stats = Router();
-stats.get('/stats', AppController.getStats);
+statusRoute.get('/status', AppController.getStatus);
+statsRoute.get('/stats', AppController.getStats);
 
-export { status, stats };
+export { statusRoute, statsRoute };
