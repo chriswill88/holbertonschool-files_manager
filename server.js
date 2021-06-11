@@ -1,14 +1,13 @@
 import express from 'express';
-import { status, stats } from './routes/index';
+import { statusRoute, statsRoute } from './routes/index';
 
 const app = express();
-const port = process.env.PORT || 5000;
+app.use('/', statusRoute);
+app.use('/', statsRoute);
 
-app.use('/status', status);
-app.use('/stats', stats);
-
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Example app listening at http://localhost:${PORT}`);
 });
 
 export default app;
