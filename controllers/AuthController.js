@@ -52,21 +52,4 @@ export default class AuthController {
       }
     }
   }
-
-  static async getMe(req, res) {
-    const xToken = req.headers['x-token'];
-
-    if (xToken) {
-      // get userId from redis
-      const currentUserId = await redisClient.get(xToken);
-      // get user from DB using userId
-      const userInDb = await users.findOne({ _id: ObjectID(currentUserId) });
-      if (userInDb) {
-        delete userInDb._id;
-        res.status(200).send(userInDb);
-      } else {
-        res.status(401).send({ error: 'Unauthorized' });
-      }
-    }
-  }
 }

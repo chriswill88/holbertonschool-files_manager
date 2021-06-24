@@ -1,7 +1,10 @@
 import sha1 from 'sha1';
+import { ObjectID } from 'bson';
 import dbClient from '../utils/db';
+import redisClient from '../utils/redis';
 
 const DB_DATABASE = process.env.DB_DATABASE ? process.env.DB_DATABASE : 'files_manager';
+const users = dbClient.client.db(DB_DATABASE).collection('users');
 
 export default class UsersController {
   static async postNew(req, res) {
@@ -23,5 +26,22 @@ export default class UsersController {
 
     // response
     res.status(201).send(await users.findOne({ email }));
+  }
+
+  static async getMe(req, res) {
+    const xToken = req.headers['x-token'];
+
+    if (xToken) {
+      // get userId from redis
+      const currentUserId = await redisClient.get(xToken);
+      // get user from DB using userId
+      const userInDb = await users.findOne({ _id: ObjectID(currentUserId) });
+      if (userInDb) {
+        delete userInDb._id;
+        res.status(200).send(userInDb);
+      } else {
+        res.status(401).send({ error: 'Unauthorized' });
+      }
+    }
   }
 }

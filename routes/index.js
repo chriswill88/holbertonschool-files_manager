@@ -13,7 +13,7 @@ statsRoute.get('/stats', AppController.getStats);
 userRoute.post('/users', UsersController.postNew);
 authRoute.get('/connect', AuthController.getConnect);
 authRoute.get('/disconnect', AuthController.getDisconnect);
-authRoute.get('/users/me', AuthController.getMe);
+userRoute.get('/users/me', UsersController.getMe);
 
 export {
   statusRoute, statsRoute, userRoute, authRoute,
