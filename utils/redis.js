@@ -16,7 +16,7 @@ class RedisClient {
   }
 
   async get(key) {
-    await this.getter(key);
+    return await this.getter(key);
   }
 
   async set(key, value, duration) {
