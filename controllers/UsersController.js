@@ -2,6 +2,7 @@ import sha1 from 'sha1';
 import { ObjectID } from 'bson';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
+import { del } from 'request';
 
 const DB_DATABASE = process.env.DB_DATABASE ? process.env.DB_DATABASE : 'files_manager';
 const users = dbClient.client.db(DB_DATABASE).collection('users');
@@ -25,7 +26,12 @@ export default class UsersController {
     else await users.insertOne({ email, password: sha1(password) });
 
     // response
-    res.status(201).send(await users.findOne({ email }));
+    const response = await users.findOne({ email })
+    if (response) {
+      response.id = response._id
+      delete response._id
+    }
+    res.status(201).send(response);
   }
 
   static async getMe(req, res) {
