@@ -29,11 +29,10 @@ export default class AuthController {
         const genToken = uuid();
         redisClient.set(genToken, dbUser._id, 60 * 60 * 24);
         // RESPONSE
-        res.status(200).send({ token: genToken });
-      } else {
-        res.status(401).send({ error: 'Unauthorized' });
+        return res.status(200).send({ token: genToken });
       }
     }
+    return res.status(401).send({ error: 'Unauthorized' });
   }
 
   static async getDisconnect(req, res) {
@@ -46,10 +45,10 @@ export default class AuthController {
       const userInDb = await users.findOne({ _id: ObjectID(currentUserId) });
       if (userInDb) {
         redisClient.del(xToken);
-        res.status(204).send();
-      } else {
-        res.status(401).send({ error: 'Unauthorized' });
+        return res.status(204).send();
       }
+      return res.status(401).send({ error: 'Unauthorized' });
     }
+    return res.status(401).send({ error: 'Unauthorized' });
   }
 }
